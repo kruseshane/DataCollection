@@ -3,6 +3,9 @@
     package="com.example.shane_kruse.datacollection">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -40,7 +43,6 @@
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/my_path" />
             </intent-filter>
         </service>
-
 
     </application>
 

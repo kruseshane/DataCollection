@@ -1,5 +1,11 @@
 package com.example.shane_kruse.datacollection;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
@@ -11,13 +17,15 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends WearableActivity {
+public class MainActivity extends WearableActivity implements SensorEventListener {
 
     private TextView mTextView;
-    private Button sendButton;
+    private SensorManager sm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,18 +33,10 @@ public class MainActivity extends WearableActivity {
         setContentView(R.layout.activity_main);
 
         mTextView = (TextView) findViewById(R.id.text);
+        sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         // Enables Always-on
         setAmbientEnabled();
-
-        sendButton = findViewById(R.id.send_button);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String datapath = "/myh_path";
-                new SendMessage(datapath, "Test").start();
-            }
-        });
     }
 
     class SendMessage extends Thread {
@@ -83,4 +83,44 @@ public class MainActivity extends WearableActivity {
             }
         }
     }
+
+    public void onSensorChanged(SensorEvent event) {
+        float[] values = event.values;
+
+        // Movement
+        float x = values[0];
+        float y = values[1];
+        float z = values[2];
+
+        //Use the same path//
+        String datapath = "/my_path";
+
+        String msg = String.valueOf(x) + "," + String.valueOf(y) + "," + String.valueOf(z);
+        new SendMessage(datapath, msg).start();
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // register this class as a listener for the orientation and
+        // accelerometer sensors
+        sm.registerListener(this,
+                sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+                SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        // unregister listener
+        super.onPause();
+        sm.unregisterListener(this);
+    }
+
 }

@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:keepScreenOn="true"
     android:background="@color/dark_grey"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context=".MainActivity"
@@ -15,11 +17,13 @@
         android:padding="@dimen/inner_frame_layout_padding"
         app:boxedEdges="all">
 
-        <Button
-            android:id="@+id/send_button"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Click" />
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="Swipe right to stop"
+            android:textSize="30sp"
+            android:textAlignment="center"/>
 
     </FrameLayout>
 </android.support.wear.widget.BoxInsetLayout>
